@@ -1,0 +1,54 @@
+Custom hook for api call
+
+Comp1-
+import React, { useCallback, useEffect, useState } from 'react'
+import useApi from './useApi';
+
+export const Comp1 = () => {
+    const [data] = useApi("https://jsonplaceholder.typicode.com/todos")
+
+    return (
+        <div>
+            {
+                data?.map(itm => (
+                    <div key={itm.id}>
+                        {
+                            itm.title
+                        }
+                    </div>
+                ))
+            }
+        </div>
+    )
+
+}
+
+export default Comp1;
+_______________________
+
+
+useApi.jsx-
+
+
+import React, { useState, useEffect } from 'react'
+
+export const useApi =(url) =>{
+    const [data, setData] = useState([])
+
+       useEffect(() => {
+            const fetchData = async () => {
+                const res = await fetch(url);
+                const data = await res.json();
+                setData(data)
+            }
+            fetchData();
+        },[])
+
+        return [data];
+}
+
+export default  useApi;
+
+
+
+
