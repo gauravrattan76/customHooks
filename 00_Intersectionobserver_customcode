@@ -1,0 +1,48 @@
+Intersection observer sample code -
+_________________________
+Index.html-
+
+
+<html>
+    <head>
+        <script src="./script.js" defer></script>
+        <link rel="stylesheet" href="./styles.css" />
+     </head>
+    </head>
+    </head>
+    </head>
+    <body>
+       <div id="targetContent">
+        this is the main content we have here
+       </div>
+ 
+    </body>
+</html>
+
+__________
+
+
+styles.css -
+
+#targetContent{
+    margin-top: 100vh;
+}
+
+______________
+
+
+Script.js-
+
+
+const el = document.getElementById('targetContent');
+const observer = new IntersectionObserver((entries) =>{
+    if(entries[0].isIntersecting)
+    {
+        alert('element came in the window')
+    }
+},{
+    threshold:1
+})
+
+
+observer.observe(el);
