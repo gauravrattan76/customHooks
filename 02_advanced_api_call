@@ -1,0 +1,66 @@
+Advanced hook for api call-
+________
+Comp1-
+
+import React, { useCallback, useEffect, useState } from 'react'
+import useApi from './useApi';
+
+export const Comp1 = () => {
+    const [data, loading, error] = useApi("https://jsonplaceholder.typicode.com/todos")
+
+
+    if (error) return (<>something went wrong!</>)
+    if (loading) return (<>loading!</>)
+    return (
+        <div>
+            {
+                data?.map(itm => (
+                    <div key={itm.id}>
+                        {
+                            itm.title
+                        }
+                    </div>
+                ))
+            }
+        </div>
+    )
+
+}
+
+export default Comp1;
+_________________________
+
+
+useApi.jsx -
+
+import React, { useState, useEffect } from 'react'
+
+
+export const useApi = (url) => {
+    const [data, setData] = useState([])
+    const [loading, setLoading] = useState(true)
+    const [error, setError] = useState("")
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                setLoading(true)
+                const res = await fetch(url);
+                if (!res.ok) throw new Error('somehting went wrong')
+                const data = await res.json();
+                setData(data)
+            }
+            catch (e) {
+                setError("something went wrong")
+            }
+            finally {
+                setLoading(false)
+            }
+        }
+        fetchData();
+    }, [])
+
+    return [data, loading, error];
+}
+
+export default useApi;
