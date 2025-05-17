@@ -1,0 +1,60 @@
+useWindow hook-
+_______________________
+
+
+import React, { useCallback, useEffect, useState } from 'react'
+// import useApi from './useApi';
+
+export const useWindow = () => {
+  const [win, setWin] = useState({
+    height: window.innerHeight,
+    width: window.innerWidth
+  })
+
+  const updateWindow = () => {
+    setWin(prev => ({
+      ...prev,
+      height: window.innerHeight,
+      width: window.innerWidth
+    }))
+  }
+
+
+  useEffect(() => {
+    window.addEventListener('resize', updateWindow)
+    return () => window.removeEventListener('resize', updateWindow)
+  }, [window])
+
+
+  return win;
+
+}
+
+export default useWindow;
+
+
+___________
+
+
+import React, { useCallback, useEffect, useState } from 'react'
+import useWindow from './useWindow';
+// import useApi from './useApi';
+
+export const Comp1 = () => {
+      const win = useWindow();
+
+
+    return (
+        <div>
+          height of the window is : {win.height}
+          <br />
+          width of the window is :{win.width}
+        </div>
+    )
+
+}
+
+export default Comp1;
+
+
+
