@@ -1,0 +1,126 @@
+Centralized way to handle error -
+
+ErrorProvider-
+
+
+import React, { createContext, useContext, useState } from 'react';
+
+const ErrorContext = createContext();
+
+export function ErrorProvider({ children }) {
+  const [error, setError] = useState(null);
+  return (
+    <ErrorContext.Provider value={{ error, setError }}>
+      {children}
+    </ErrorContext.Provider>
+  );
+}
+
+export function useError() {
+  return useContext(ErrorContext);
+}
+
+// Usage in a component
+function MyComponent() {
+  const { setError } = useError();
+
+  const handleClick = () => {
+    try {
+      // Code that might throw an error
+    } catch (e) {
+      setError(e);
+    }
+  };
+
+  return <button onClick={handleClick}>Click me</button>;
+}
+
+
+
+__________
+
+ErrorDispay-
+
+import React from 'react';
+import { useError } from './ErrorContext'; // Adjust the import path as needed
+
+function ErrorDisplay() {
+  const { error, setError } = useError();
+
+  if (!error) return null;
+
+  return (
+    <div className="error-message">
+      <p>{error.message || 'An unexpected error occurred.'}</p>
+      <button onClick={() => setError(null)}>Dismiss</button>
+    </div>
+  );
+}
+
+export default ErrorDisplay;
+
+
+____________-
+
+Wrap app with provider-
+
+
+import React from 'react';
+import ReactDOM from 'react-dom';
+import App from './App';
+import { ErrorProvider } from './ErrorContext'; // Adjust the import path as needed
+
+ReactDOM.render(
+  <ErrorProvider>
+    <App />
+  </ErrorProvider>,
+  document.getElementById('root')
+);
+
+
+
+_____________
+
+
+import React from 'react';
+import ErrorDisplay from './ErrorDisplay'; // Adjust the import path as needed
+import MyComponent from './MyComponent'; // Your component that may trigger errors
+
+function App() {
+  return (
+    <div>
+      <ErrorDisplay />
+      <MyComponent />
+    </div>
+  );
+}
+
+export default App;
+
+
+
+_____________
+
+
+Triggering error in components-
+
+
+import React from 'react';
+import { useError } from './ErrorContext'; // Adjust the import path as needed
+
+function MyComponent() {
+  const { setError } = useError();
+
+  const handleClick = () => {
+    try {
+      // Code that might throw an error
+      throw new Error('This is a test error.');
+    } catch (e) {
+      setError(e);
+    }
+  };
+
+  return <button onClick={handleClick}>Click me</button>;
+}
+
+export default MyComponent;
